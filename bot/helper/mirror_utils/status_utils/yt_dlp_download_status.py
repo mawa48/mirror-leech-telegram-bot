@@ -2,6 +2,7 @@ from bot import DOWNLOAD_DIR
 from bot.helper.ext_utils.bot_utils import MirrorStatus, get_readable_file_size, get_readable_time
 from bot.helper.ext_utils.fs_utils import get_path_size
 
+
 class YtDlpDownloadStatus:
     def __init__(self, obj, listener, gid):
         self.__obj = obj
@@ -14,9 +15,9 @@ class YtDlpDownloadStatus:
 
     def processed_bytes(self):
         if self.__obj.downloaded_bytes != 0:
-          return self.__obj.downloaded_bytes
+            return self.__obj.downloaded_bytes
         else:
-          return get_path_size(f"{DOWNLOAD_DIR}{self.__uid}")
+            return get_path_size(f"{DOWNLOAD_DIR}{self.__uid}")
 
     def size_raw(self):
         return self.__obj.size

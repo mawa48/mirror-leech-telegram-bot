@@ -41,6 +41,7 @@ def cancel_mirror(update, context):
 
     dl.download().cancel_download()
 
+
 def cancel_all(status):
     gid = ''
     while dl := getAllDownload(status):
@@ -48,6 +49,7 @@ def cancel_all(status):
             gid = dl.gid()
             dl.download().cancel_download()
             sleep(1)
+
 
 def cancell_all_buttons(update, context):
     with download_dict_lock:
@@ -71,6 +73,7 @@ def cancell_all_buttons(update, context):
     can_msg = sendMarkup('Choose tasks to cancel.', context.bot, update.message, button)
     Thread(target=auto_delete_message, args=(context.bot, update.message, can_msg)).start()
 
+
 def cancel_all_update(update, context):
     query = update.callback_query
     user_id = query.from_user.id
@@ -84,7 +87,6 @@ def cancel_all_update(update, context):
         cancel_all(data[1])
     else:
         query.answer(text="You don't have permission to use these buttons!", show_alert=True)
-
 
 
 cancel_mirror_handler = CommandHandler(BotCommands.CancelMirror, cancel_mirror,

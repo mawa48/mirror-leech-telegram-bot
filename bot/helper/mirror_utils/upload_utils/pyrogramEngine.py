@@ -115,7 +115,7 @@ class TgUploader:
                                                                   disable_notification=True,
                                                                   progress=self.__upload_progress)
                 elif is_audio:
-                    duration , artist, title = get_media_info(up_path)
+                    duration, artist, title = get_media_info(up_path)
                     self.__sent_msg = self.__sent_msg.reply_audio(audio=up_path,
                                                                   quote=True,
                                                                   caption=cap_mono,

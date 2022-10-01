@@ -23,6 +23,7 @@ def sendMessage(text: str, bot, message: Message):
         LOGGER.error(str(e))
         return
 
+
 def sendMarkup(text: str, bot, message: Message, reply_markup: InlineKeyboardMarkup):
     try:
         return bot.sendMessage(message.chat_id,
@@ -37,6 +38,7 @@ def sendMarkup(text: str, bot, message: Message, reply_markup: InlineKeyboardMar
         LOGGER.error(str(e))
         return
 
+
 def editMessage(text: str, message: Message, reply_markup=None):
     try:
         bot.editMessageText(text=text, message_id=message.message_id,
@@ -49,6 +51,7 @@ def editMessage(text: str, message: Message, reply_markup=None):
     except Exception as e:
         LOGGER.error(str(e))
         return str(e)
+
 
 def sendRss(text: str, bot):
     if rss_session is None:
@@ -73,6 +76,7 @@ def sendRss(text: str, bot):
             LOGGER.error(str(e))
             return
 
+
 def deleteMessage(bot, message: Message):
     try:
         bot.deleteMessage(chat_id=message.chat.id,
@@ -80,17 +84,19 @@ def deleteMessage(bot, message: Message):
     except Exception as e:
         LOGGER.error(str(e))
 
+
 def sendLogFile(bot, message: Message):
     with open('log.txt', 'rb') as f:
         bot.sendDocument(document=f, filename=f.name,
                           reply_to_message_id=message.message_id,
                           chat_id=message.chat_id)
 
+
 def sendFile(bot, message: Message, name: str, caption=""):
     try:
         with open(name, 'rb') as f:
             bot.sendDocument(document=f, filename=f.name, reply_to_message_id=message.message_id,
-                             caption=caption, parse_mode='HTML',chat_id=message.chat_id)
+                             caption=caption, parse_mode='HTML', chat_id=message.chat_id)
         remove(name)
         return
     except RetryAfter as r:
@@ -100,6 +106,7 @@ def sendFile(bot, message: Message, name: str, caption=""):
     except Exception as e:
         LOGGER.error(str(e))
         return
+
 
 def auto_delete_message(bot, cmd_message: Message, bot_message: Message):
     if AUTO_DELETE_MESSAGE_DURATION != -1:
@@ -111,6 +118,7 @@ def auto_delete_message(bot, cmd_message: Message, bot_message: Message):
         except AttributeError:
             pass
 
+
 def delete_all_messages():
     with status_reply_dict_lock:
         for data in list(status_reply_dict.values()):
@@ -119,6 +127,7 @@ def delete_all_messages():
                 del status_reply_dict[data[0].chat.id]
             except Exception as e:
                 LOGGER.error(str(e))
+
 
 def update_all_messages(force=False):
     with status_reply_dict_lock:
@@ -142,6 +151,7 @@ def update_all_messages(force=False):
                     return
                 status_reply_dict[chat_id][0].text = msg
                 status_reply_dict[chat_id][1] = time()
+
 
 def sendStatusMessage(msg, bot):
     progress, buttons = get_readable_message()

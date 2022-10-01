@@ -43,14 +43,17 @@ def getleechinfo(from_user):
            f"Custom Thumbnail <b>{thumbmsg}</b>"
     return text, button
 
+
 def editLeechType(message, query):
     msg, button = getleechinfo(query.from_user)
     editMessage(msg, message, button)
+
 
 def leechSet(update, context):
     msg, button = getleechinfo(update.message.from_user)
     choose_msg = sendMarkup(msg, context.bot, update.message, button)
     Thread(target=auto_delete_message, args=(context.bot, update.message, choose_msg)).start()
+
 
 def setLeechType(update, context):
     query = update.callback_query
@@ -94,6 +97,7 @@ def setLeechType(update, context):
         except:
             pass
 
+
 def setThumb(update, context):
     user_id = update.message.from_user.id
     reply_to = update.message.reply_to_message
@@ -111,6 +115,7 @@ def setThumb(update, context):
         sendMessage(msg, context.bot, update.message)
     else:
         sendMessage("Reply to a photo to save custom thumbnail.", context.bot, update.message)
+
 
 leech_set_handler = CommandHandler(BotCommands.LeechSetCommand, leechSet, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 set_thumbnail_handler = CommandHandler(BotCommands.SetThumbCommand, setThumb, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)

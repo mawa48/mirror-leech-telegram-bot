@@ -7,6 +7,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.message_utils import sendMessage, sendMarkup, sendStatusMessage
 from bot.helper.ext_utils.bot_utils import getDownloadByGid, MirrorStatus, bt_selection_buttons
 
+
 def select(update, context):
     user_id = update.message.from_user.id
     if len(context.args) == 1:
@@ -58,6 +59,7 @@ def select(update, context):
     msg = "Your download paused. Choose files then press Done Selecting button to resume downloading."
     sendMarkup(msg, context.bot, update.message, SBUTTONS)
 
+
 def get_confirm(update, context):
     query = update.callback_query
     user_id = query.from_user.id
@@ -89,11 +91,11 @@ def get_confirm(update, context):
                 if f.priority == 0:
                     f_paths = [f"{path}/{f.name}", f"{path}/{f.name}.!qB"]
                     for f_path in f_paths:
-                       if ospath.exists(f_path):
-                           try:
-                               remove(f_path)
-                           except:
-                               pass
+                        if ospath.exists(f_path):
+                            try:
+                                remove(f_path)
+                            except:
+                                pass
             client.torrents_resume(torrent_hashes=id_)
         else:
             res = aria2.client.get_files(id_)

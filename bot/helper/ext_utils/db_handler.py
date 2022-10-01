@@ -3,6 +3,7 @@ from psycopg2 import connect, DatabaseError
 
 from bot import DB_URI, AUTHORIZED_CHATS, SUDO_USERS, AS_DOC_USERS, AS_MEDIA_USERS, rss_dict, LOGGER, botname
 
+
 class DbManger:
     def __init__(self):
         self.err = False
@@ -228,14 +229,11 @@ class DbManger:
                     else:
                         notifier_dict[row[0]][row[2]] = [row[1]]
                 else:
-                    usr_dict = {}
-                    usr_dict[row[2]] = [row[1]]
-                    notifier_dict[row[0]] = usr_dict
+                    notifier_dict[row[0]] = {row[2]: [row[1]]}
         self.cur.execute("TRUNCATE TABLE {}".format(botname))
         self.conn.commit()
         self.disconnect()
-        return notifier_dict # return a dict ==> {cid: {tag: [mid, mid, ...]}}
-
+        return notifier_dict  # return a dict ==> {cid: {tag: [mid, mid, ...]}}
 
     def trunc_table(self, name):
         if self.err:
@@ -243,6 +241,7 @@ class DbManger:
         self.cur.execute("TRUNCATE TABLE {}".format(name))
         self.conn.commit()
         self.disconnect()
+
 
 if DB_URI is not None:
     DbManger().db_init()

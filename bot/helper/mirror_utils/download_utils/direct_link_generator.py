@@ -72,6 +72,7 @@ def direct_link_generator(link: str):
     else:
         raise DirectDownloadLinkException(f'No Direct link function found for {link}')
 
+
 def yandex_disk(url: str) -> str:
     """ Yandex.Disk direct link generator
     Based on https://github.com/wldhx/yadisk-direct """
@@ -84,6 +85,7 @@ def yandex_disk(url: str) -> str:
         return rget(api.format(link)).json()['href']
     except KeyError:
         raise DirectDownloadLinkException("ERROR: File not found/Download limit reached")
+
 
 def uptobox(url: str) -> str:
     """ Uptobox direct link generator
@@ -121,6 +123,7 @@ def uptobox(url: str) -> str:
                 raise DirectDownloadLinkException(f"ERROR: {result['message']}")
     return dl_url
 
+
 def mediafire(url: str) -> str:
     """ MediaFire direct link generator """
     try:
@@ -130,6 +133,7 @@ def mediafire(url: str) -> str:
     page = BeautifulSoup(rget(link).content, 'lxml')
     info = page.find('a', {'aria-label': 'Download file'})
     return info.get('href')
+
 
 def osdn(url: str) -> str:
     """ OSDN direct link generator """
@@ -149,6 +153,7 @@ def osdn(url: str) -> str:
         urls.append(re_sub(r'm=(.*)&f', f'm={mirror}&f', link))
     return urls[0]
 
+
 def github(url: str) -> str:
     """ GitHub direct links generator """
     try:
@@ -161,17 +166,20 @@ def github(url: str) -> str:
     except KeyError:
         raise DirectDownloadLinkException("ERROR: Can't extract the link")
 
+
 def hxfile(url: str) -> str:
     """ Hxfile direct link generator
     Based on https://github.com/zevtyardt/lk21
     """
     return Bypass().bypass_filesIm(url)
 
+
 def anonfiles(url: str) -> str:
     """ Anonfiles direct link generator
     Based on https://github.com/zevtyardt/lk21
     """
     return Bypass().bypass_anonfiles(url)
+
 
 def letsupload(url: str) -> str:
     """ Letsupload direct link generator
@@ -183,23 +191,26 @@ def letsupload(url: str) -> str:
         raise DirectDownloadLinkException("No Letsupload links found\n")
     return Bypass().bypass_url(link)
 
+
 def fembed(link: str) -> str:
     """ Fembed direct link generator
     Based on https://github.com/zevtyardt/lk21
     """
-    dl_url= Bypass().bypass_fembed(link)
+    dl_url = Bypass().bypass_fembed(link)
     count = len(dl_url)
     lst_link = [dl_url[i] for i in dl_url]
     return lst_link[count-1]
+
 
 def sbembed(link: str) -> str:
     """ Sbembed direct link generator
     Based on https://github.com/zevtyardt/lk21
     """
-    dl_url= Bypass().bypass_sbembed(link)
+    dl_url = Bypass().bypass_sbembed(link)
     count = len(dl_url)
     lst_link = [dl_url[i] for i in dl_url]
     return lst_link[count-1]
+
 
 def onedrive(link: str) -> str:
     """ Onedrive direct link generator
@@ -211,6 +222,7 @@ def onedrive(link: str) -> str:
     if resp.status_code != 302:
         raise DirectDownloadLinkException("ERROR: Unauthorized link, the link may be private")
     return resp.next.url
+
 
 def pixeldrain(url: str) -> str:
     """ Based on https://github.com/yash-dk/TorToolkit-Telegram """
@@ -228,17 +240,20 @@ def pixeldrain(url: str) -> str:
     else:
         raise DirectDownloadLinkException(f"ERROR: Cant't download due {resp['message']}.")
 
+
 def antfiles(url: str) -> str:
     """ Antfiles direct link generator
     Based on https://github.com/zevtyardt/lk21
     """
     return Bypass().bypass_antfiles(url)
 
+
 def streamtape(url: str) -> str:
     """ Streamtape direct link generator
     Based on https://github.com/zevtyardt/lk21
     """
     return Bypass().bypass_streamtape(url)
+
 
 def racaty(url: str) -> str:
     """ Racaty direct link generator
@@ -253,10 +268,11 @@ def racaty(url: str) -> str:
     soup = BeautifulSoup(r.text, "lxml")
     op = soup.find("input", {"name": "op"})["value"]
     ids = soup.find("input", {"name": "id"})["value"]
-    rapost = scraper.post(url, data = {"op": op, "id": ids})
+    rapost = scraper.post(url, data={"op": op, "id": ids})
     rsoup = BeautifulSoup(rapost.text, "lxml")
     dl_url = rsoup.find("a", {"id": "uniqueExpirylink"})["href"].replace(" ", "%20")
     return dl_url
+
 
 def fichier(link: str) -> str:
     """ 1Fichier direct link generator
@@ -265,30 +281,30 @@ def fichier(link: str) -> str:
     regex = r"^([http:\/\/|https:\/\/]+)?.*1fichier\.com\/\?.+"
     gan = re_match(regex, link)
     if not gan:
-      raise DirectDownloadLinkException("ERROR: The link you entered is wrong!")
+        raise DirectDownloadLinkException("ERROR: The link you entered is wrong!")
     if "::" in link:
-      pswd = link.split("::")[-1]
-      url = link.split("::")[-2]
+        pswd = link.split("::")[-1]
+        url = link.split("::")[-2]
     else:
-      pswd = None
-      url = link
+        pswd = None
+        url = link
     try:
-      if pswd is None:
-        req = rpost(url)
-      else:
-        pw = {"pass": pswd}
-        req = rpost(url, data=pw)
+        if pswd is None:
+            req = rpost(url)
+        else:
+            pw = {"pass": pswd}
+            req = rpost(url, data=pw)
     except:
-      raise DirectDownloadLinkException("ERROR: Unable to reach 1fichier server!")
+        raise DirectDownloadLinkException("ERROR: Unable to reach 1fichier server!")
     if req.status_code == 404:
-      raise DirectDownloadLinkException("ERROR: File not found/The link you entered is wrong!")
+        raise DirectDownloadLinkException("ERROR: File not found/The link you entered is wrong!")
     soup = BeautifulSoup(req.content, 'lxml')
     if soup.find("a", {"class": "ok btn-general btn-orange"}) is not None:
         dl_url = soup.find("a", {"class": "ok btn-general btn-orange"})["href"]
         if dl_url is None:
-          raise DirectDownloadLinkException("ERROR: Unable to generate Direct Link 1fichier!")
+            raise DirectDownloadLinkException("ERROR: Unable to generate Direct Link 1fichier!")
         else:
-          return dl_url
+            return dl_url
     elif len(soup.find_all("div", {"class": "ct_warn"})) == 3:
         str_2 = soup.find_all("div", {"class": "ct_warn"})[-1]
         if "you must wait" in str(str_2).lower():
@@ -298,7 +314,7 @@ def fichier(link: str) -> str:
             else:
                 raise DirectDownloadLinkException(f"ERROR: 1fichier is on a limit. Please wait {numbers[0]} minute.")
         elif "protect access" in str(str_2).lower():
-          raise DirectDownloadLinkException(f"ERROR: This link requires a password!\n\n<b>This link requires a password!</b>\n- Insert sign <b>::</b> after the link and write the password after the sign.\n\n<b>Example:</b> https://1fichier.com/?smmtd8twfpm66awbqz04::love you\n\n* No spaces between the signs <b>::</b>\n* For the password, you can use a space!")
+            raise DirectDownloadLinkException(f"ERROR: This link requires a password!\n\n<b>This link requires a password!</b>\n- Insert sign <b>::</b> after the link and write the password after the sign.\n\n<b>Example:</b> https://1fichier.com/?smmtd8twfpm66awbqz04::love you\n\n* No spaces between the signs <b>::</b>\n* For the password, you can use a space!")
         else:
             print(str_2)
             raise DirectDownloadLinkException("ERROR: Failed to generate Direct Link from 1fichier!")
@@ -312,11 +328,12 @@ def fichier(link: str) -> str:
             else:
                 raise DirectDownloadLinkException(f"ERROR: 1fichier is on a limit. Please wait {numbers[0]} minute.")
         elif "bad password" in str(str_3).lower():
-          raise DirectDownloadLinkException("ERROR: The password you entered is wrong!")
+            raise DirectDownloadLinkException("ERROR: The password you entered is wrong!")
         else:
             raise DirectDownloadLinkException("ERROR: Error trying to generate Direct Link from 1fichier!")
     else:
         raise DirectDownloadLinkException("ERROR: Error trying to generate Direct Link from 1fichier!")
+
 
 def solidfiles(url: str) -> str:
     """ Solidfiles direct link generator
@@ -325,9 +342,10 @@ def solidfiles(url: str) -> str:
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36'
     }
-    pageSource = rget(url, headers = headers).text
+    pageSource = rget(url, headers=headers).text
     mainOptions = str(re_search(r'viewerOptions\'\,\ (.*?)\)\;', pageSource).group(1))
     return jsonloads(mainOptions)["downloadUrl"]
+
 
 def krakenfiles(page_link: str) -> str:
     """ krakenfiles direct link generator
@@ -366,12 +384,13 @@ def krakenfiles(page_link: str) -> str:
     else:
         raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from kraken for : {page_link}")
 
+
 def uploadee(url: str) -> str:
     """ uploadee direct link generator
     By https://github.com/iron-heart-x"""
     try:
         soup = BeautifulSoup(rget(url).content, 'lxml')
-        sa = soup.find('a', attrs={'id':'d_l'})
+        sa = soup.find('a', attrs={'id': 'd_l'})
         return sa['href']
     except:
         raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from upload.ee for : {url}")

@@ -14,6 +14,7 @@ from .listener import MirrorLeechListener
 
 listener_dict = {}
 
+
 def _ytdl(bot, message, isZip=False, isLeech=False):
     mssg = message.text
     user_id = message.from_user.id
@@ -149,9 +150,7 @@ Check all arguments from this <a href='https://github.com/yt-dlp/yt-dlp/blob/mas
                     if b_name in formats_dict:
                         formats_dict[b_name][frmt['tbr']] = [size, v_format]
                     else:
-                        subformat = {}
-                        subformat[frmt['tbr']] = [size, v_format]
-                        formats_dict[b_name] = subformat
+                        formats_dict[b_name] = {frmt['tbr']: [size, v_format]}
 
             for b_name, d_dict in formats_dict.items():
                 if len(d_dict) == 1:
@@ -179,6 +178,7 @@ Check all arguments from this <a href='https://github.com/yt-dlp/yt-dlp/blob/mas
         sleep(4)
         Thread(target=_ytdl, args=(bot, nextmsg, isZip, isLeech)).start()
 
+
 def _qual_subbuttons(task_id, b_name, msg):
     buttons = button_build.ButtonMaker()
     task_info = listener_dict[task_id]
@@ -190,6 +190,7 @@ def _qual_subbuttons(task_id, b_name, msg):
     buttons.sbutton("Cancel", f"qu {task_id} cancel")
     SUBBUTTONS = buttons.build_menu(2)
     editMessage(f"Choose Bit rate for <b>{b_name}</b>:", msg, SUBBUTTONS)
+
 
 def _mp3_subbuttons(task_id, msg, playlist=False):
     buttons = button_build.ButtonMaker()
@@ -206,6 +207,7 @@ def _mp3_subbuttons(task_id, msg, playlist=False):
     buttons.sbutton("Cancel", f"qu {task_id} cancel")
     SUBBUTTONS = buttons.build_menu(2)
     editMessage(f"Choose Audio{i} Bitrate:", msg, SUBBUTTONS)
+
 
 def select_format(update, context):
     query = update.callback_query
@@ -256,6 +258,7 @@ def select_format(update, context):
         query.message.delete()
     del listener_dict[task_id]
 
+
 def _auto_cancel(msg, msg_id):
     sleep(120)
     try:
@@ -264,17 +267,22 @@ def _auto_cancel(msg, msg_id):
     except:
         pass
 
+
 def ytdl(update, context):
     _ytdl(context.bot, update.message)
+
 
 def ytdlZip(update, context):
     _ytdl(context.bot, update.message, True)
 
+
 def ytdlleech(update, context):
     _ytdl(context.bot, update.message, isLeech=True)
 
+
 def ytdlZipleech(update, context):
     _ytdl(context.bot, update.message, True, True)
+
 
 ytdl_handler = CommandHandler(BotCommands.YtdlCommand, ytdl,
                                 filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)

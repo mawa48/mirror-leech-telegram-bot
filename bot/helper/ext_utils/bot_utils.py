@@ -31,6 +31,7 @@ class MirrorStatus:
     STATUS_CHECKING = "CheckUp"
     STATUS_SEEDING = "Seed"
 
+
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
 
@@ -51,6 +52,7 @@ class setInterval:
     def cancel(self):
         self.stopEvent.set()
 
+
 def get_readable_file_size(size_in_bytes) -> str:
     if size_in_bytes is None:
         return '0B'
@@ -63,12 +65,14 @@ def get_readable_file_size(size_in_bytes) -> str:
     except IndexError:
         return 'File too large'
 
+
 def getDownloadByGid(gid):
     with download_dict_lock:
         for dl in list(download_dict.values()):
             if dl.gid() == gid:
                 return dl
     return None
+
 
 def getAllDownload(req_status: str):
     with download_dict_lock:
@@ -77,6 +81,7 @@ def getAllDownload(req_status: str):
             if req_status in ['all', status]:
                 return dl
     return None
+
 
 def bt_selection_buttons(id_: str):
     if len(id_) > 20:
@@ -100,6 +105,7 @@ def bt_selection_buttons(id_: str):
     buttons.sbutton("Done Selecting", f"btsel done {gid} {id_}")
     return buttons.build_menu(2)
 
+
 def get_progress_bar_string(status):
     completed = status.processed_bytes() / 8
     total = status.size_raw() / 8
@@ -111,6 +117,7 @@ def get_progress_bar_string(status):
     p_str = f"[{p_str}]"
     return p_str
 
+
 def get_readable_message():
     with download_dict_lock:
         msg = ""
@@ -118,7 +125,7 @@ def get_readable_message():
             tasks = len(download_dict)
             global pages
             pages = ceil(tasks/STATUS_LIMIT)
-            if PAGE_NO > pages and pages != 0:
+            if PAGE_NO > pages != 0:
                 globals()['COUNT'] -= STATUS_LIMIT
                 globals()['PAGE_NO'] -= 1
         for index, download in enumerate(list(download_dict.values())[COUNT:], start=1):
@@ -180,6 +187,7 @@ def get_readable_message():
             return msg + bmsg, button
         return msg + bmsg, ""
 
+
 def turn(data):
     try:
         with download_dict_lock:
@@ -202,6 +210,7 @@ def turn(data):
     except:
         return False
 
+
 def get_readable_time(seconds: int) -> str:
     result = ''
     (days, remainder) = divmod(seconds, 86400)
@@ -220,15 +229,19 @@ def get_readable_time(seconds: int) -> str:
     result += f'{seconds}s'
     return result
 
+
 def is_url(url: str):
     url = re_findall(URL_REGEX, url)
     return bool(url)
 
+
 def is_gdrive_link(url: str):
     return "drive.google.com" in url
 
+
 def is_mega_link(url: str):
     return "mega.nz" in url or "mega.co.nz" in url
+
 
 def get_mega_link_type(url: str):
     if "folder" in url:
@@ -239,9 +252,11 @@ def get_mega_link_type(url: str):
         return "folder"
     return "file"
 
+
 def is_magnet(url: str):
     magnet = re_findall(MAGNET_REGEX, url)
     return bool(magnet)
+
 
 def new_thread(fn):
     """To use as decorator to make a function call threaded.
@@ -255,9 +270,10 @@ def new_thread(fn):
 
     return wrapper
 
+
 def get_content_type(link: str) -> str:
     try:
-        res = rhead(link, allow_redirects=True, timeout=5, headers = {'user-agent': 'Wget/1.12'})
+        res = rhead(link, allow_redirects=True, timeout=5, headers={'user-agent': 'Wget/1.12'})
         content_type = res.headers.get('content-type')
     except:
         try:

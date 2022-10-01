@@ -59,6 +59,7 @@ def __onDownloadStarted(api, gid):
     except Exception as e:
         LOGGER.error(f"{e} onDownloadStart: {gid} check duplicate didn't pass")
 
+
 @new_thread
 def __onDownloadComplete(api, gid):
     try:
@@ -88,6 +89,7 @@ def __onDownloadComplete(api, gid):
         if dl := getDownloadByGid(gid):
             dl.listener().onDownloadComplete()
             api.remove([download], force=True, files=True)
+
 
 @new_thread
 def __onBtDownloadComplete(api, gid):
@@ -135,11 +137,13 @@ def __onBtDownloadComplete(api, gid):
         else:
             api.remove([download], force=True, files=True)
 
+
 @new_thread
 def __onDownloadStopped(api, gid):
     sleep(6)
     if dl := getDownloadByGid(gid):
         dl.listener().onDownloadError('Dead torrent!')
+
 
 @new_thread
 def __onDownloadError(api, gid):
@@ -154,6 +158,7 @@ def __onDownloadError(api, gid):
     if dl := getDownloadByGid(gid):
         dl.listener().onDownloadError(error)
 
+
 def start_listener():
     aria2.listen_to_notifications(threaded=True,
                                   on_download_start=__onDownloadStarted,
@@ -162,6 +167,7 @@ def start_listener():
                                   on_download_complete=__onDownloadComplete,
                                   on_bt_download_complete=__onBtDownloadComplete,
                                   timeout=60)
+
 
 def add_aria2c_download(link: str, path, listener, filename, auth, select, ratio, seed_time):
     args = {'dir': path, 'max-upload-limit': '1K'}
