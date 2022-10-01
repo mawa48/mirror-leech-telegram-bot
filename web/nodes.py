@@ -27,9 +27,11 @@ class TorNode(NodeMixin):
 def qb_get_folders(path):
     return path.split("/")
 
+
 def get_folders(path):
     fs = re_findall(DOWNLOAD_DIR + r'[0-9]+/(.+)', path)[0]
     return fs.split('/')
+
 
 def make_tree(res, aria2=False):
     parent = TorNode("Torrent")
@@ -75,12 +77,14 @@ def make_tree(res, aria2=False):
                 TorNode(folders[-1], is_file=True, parent=parent, size=i['length'], priority=priority, file_id=i['index'])
     return create_list(parent, ["", 0])
 
+
 """
 def print_tree(parent):
     for pre, _, node in RenderTree(parent):
         treestr = u"%s%s" % (pre, node.name)
         print(treestr.ljust(8), node.is_folder, node.is_file)
 """
+
 
 def create_list(par, msg):
     if par.name != ".unwanted":

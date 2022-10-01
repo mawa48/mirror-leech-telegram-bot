@@ -34,6 +34,7 @@ def authorize(update, context):
             msg = 'Chat Authorized'
     sendMessage(msg, context.bot, update.message)
 
+
 def unauthorize(update, context):
     user_id = ""
     reply_message = update.message.reply_to_message
@@ -62,6 +63,7 @@ def unauthorize(update, context):
             msg = 'Chat Already Unauthorized!'
     sendMessage(msg, context.bot, update.message)
 
+
 def addSudo(update, context):
     user_id = ""
     reply_message = update.message.reply_to_message
@@ -82,6 +84,7 @@ def addSudo(update, context):
         msg = "Give ID or Reply To message of whom you want to Promote."
     sendMessage(msg, context.bot, update.message)
 
+
 def removeSudo(update, context):
     user_id = ""
     reply_message = update.message.reply_to_message
@@ -96,6 +99,7 @@ def removeSudo(update, context):
         msg = "Give ID or Reply To message of whom you want to remove from Sudo"
     sendMessage(msg, context.bot, update.message)
 
+
 def sendAuthChats(update, context):
     user = sudo = ''
     user += '\n'.join(f"<code>{uid}</code>" for uid in AUTHORIZED_CHATS)
@@ -104,13 +108,13 @@ def sendAuthChats(update, context):
 
 
 send_auth_handler = CommandHandler(command=BotCommands.AuthorizedUsersCommand, callback=sendAuthChats,
-                                    filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
+                                   filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
 authorize_handler = CommandHandler(command=BotCommands.AuthorizeCommand, callback=authorize,
-                                    filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
+                                   filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
 unauthorize_handler = CommandHandler(command=BotCommands.UnAuthorizeCommand, callback=unauthorize,
-                                    filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
+                                     filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
 addsudo_handler = CommandHandler(command=BotCommands.AddSudoCommand, callback=addSudo,
-                                    filters=CustomFilters.owner_filter, run_async=True)
+                                 filters=CustomFilters.owner_filter, run_async=True)
 removesudo_handler = CommandHandler(command=BotCommands.RmSudoCommand, callback=removeSudo,
                                     filters=CustomFilters.owner_filter, run_async=True)
 

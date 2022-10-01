@@ -12,6 +12,7 @@ from bot.helper.telegram_helper import button_build
 
 rss_dict_lock = Lock()
 
+
 def rss_list(update, context):
     if len(rss_dict) > 0:
         list_feed = "<b>Your subscriptions: </b>\n\n"
@@ -20,6 +21,7 @@ def rss_list(update, context):
         sendMessage(list_feed, context.bot, update.message)
     else:
         sendMessage("No subscriptions.", context.bot, update.message)
+
 
 def rss_get(update, context):
     try:
@@ -50,6 +52,7 @@ def rss_get(update, context):
     except (IndexError, ValueError):
         sendMessage(f"Use this format to fetch:\n/{BotCommands.RssGetCommand} Title value", context.bot, update.message)
 
+
 def rss_sub(update, context):
     try:
         args = update.message.text.split(maxsplit=3)
@@ -63,8 +66,8 @@ def rss_sub(update, context):
                 filters = filters.split('f: ', 1)[1]
                 filters_list = filters.split('|')
                 for x in filters_list:
-                   y = x.split(' or ')
-                   f_lists.append(y)
+                    y = x.split(' or ')
+                    f_lists.append(y)
             else:
                 filters = None
         else:
@@ -118,6 +121,7 @@ def rss_sub(update, context):
         msg += " or whatever and use them in filter to avoid wrong match"
         sendMessage(msg, context.bot, update.message)
 
+
 def rss_unsub(update, context):
     try:
         title = context.args[0]
@@ -135,6 +139,7 @@ def rss_unsub(update, context):
     except IndexError:
         sendMessage(f"Use this format to remove feed url:\n/{BotCommands.RssUnSubCommand} Title", context.bot, update.message)
 
+
 def rss_settings(update, context):
     buttons = button_build.ButtonMaker()
     buttons.sbutton("Unsubscribe All", "rss unsuball")
@@ -147,6 +152,7 @@ def rss_settings(update, context):
     button = buttons.build_menu(1)
     setting = sendMarkup('Rss Settings', context.bot, update.message, button)
     Thread(target=auto_delete_message, args=(context.bot, update.message, setting)).start()
+
 
 def rss_set_update(update, context):
     query = update.callback_query
@@ -184,6 +190,7 @@ def rss_set_update(update, context):
             query.message.reply_to_message.delete()
         except:
             pass
+
 
 def rss_monitor(context):
     with rss_dict_lock:
@@ -235,6 +242,7 @@ def rss_monitor(context):
         except Exception as e:
             LOGGER.error(f"{e} Feed Name: {name} - Feed Link: {data[0]}")
             continue
+
 
 if DB_URI is not None and RSS_CHAT_ID is not None:
     rss_list_handler = CommandHandler(BotCommands.RssListCommand, rss_list, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)

@@ -24,15 +24,16 @@ setdefaulttimeout(600)
 botStartTime = time()
 
 basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[FileHandler('log.txt'), StreamHandler()],
-                    level=INFO)
+            handlers=[FileHandler('log.txt'), StreamHandler()], level=INFO)
 
 LOGGER = getLogger(__name__)
 
 load_dotenv('config.env', override=True)
 
+
 def getConfig(name: str):
     return environ[name]
+
 
 try:
     NETRC_URL = getConfig('NETRC_URL')
@@ -94,8 +95,10 @@ aria2 = ariaAPI(
     )
 )
 
+
 def get_client():
     return qbClient(host="localhost", port=8090)
+
 
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
@@ -116,7 +119,7 @@ AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
 AS_DOC_USERS = set()
 AS_MEDIA_USERS = set()
-EXTENSION_FILTER = set(['.aria2'])
+EXTENSION_FILTER = {'.aria2'}
 
 try:
     BOT_TOKEN = getConfig('BOT_TOKEN')
@@ -178,6 +181,7 @@ try:
 except:
     rss_session = None
 
+
 def aria2c_init():
     try:
         log_info("Initializing Aria2c")
@@ -191,6 +195,8 @@ def aria2c_init():
             aria2.remove([download], force=True, files=True)
     except Exception as e:
         log_error(f"Aria2c initializing error: {e}")
+
+
 Thread(target=aria2c_init).start()
 
 try:

@@ -33,6 +33,7 @@ if SEARCH_API_LINK:
 else:
     SITES = None
 
+
 def torser(update, context):
     user_id = update.message.from_user.id
     buttons = button_build.ButtonMaker()
@@ -58,6 +59,7 @@ def torser(update, context):
     else:
         button = _plugin_buttons(user_id)
         sendMarkup('Choose site to search:', context.bot, update.message, button)
+
 
 def torserbut(update, context):
     query = update.callback_query
@@ -96,6 +98,7 @@ def torserbut(update, context):
     else:
         query.answer()
         editMessage("Search has been canceled!", message)
+
 
 def _search(bot, key, site, message, method):
     if method.startswith('api'):
@@ -158,6 +161,7 @@ def _search(bot, key, site, message, method):
     if not method.startswith('api'):
         client.search_delete(search_id=search_id)
 
+
 def _getResult(search_results, key, message, method):
     if method == 'apirecent':
         msg = '<span class="container center rfontsize"><h4>API Recent Results</h4></span>'
@@ -210,12 +214,14 @@ def _getResult(search_results, key, message, method):
         msg += '</span>'
     return msg
 
+
 def _api_buttons(user_id, method):
     buttons = button_build.ButtonMaker()
     for data, name in SITES.items():
         buttons.sbutton(name, f"torser {user_id} {data} {method}")
     buttons.sbutton("Cancel", f"torser {user_id} cancel")
     return buttons.build_menu(2)
+
 
 def _plugin_buttons(user_id):
     buttons = button_build.ButtonMaker()

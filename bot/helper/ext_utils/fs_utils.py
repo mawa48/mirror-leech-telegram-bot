@@ -17,6 +17,7 @@ ARCH_EXT = [".tar.bz2", ".tar.gz", ".bz2", ".gz", ".tar.xz", ".tar", ".tbz2", ".
             ".cpio", ".cramfs", ".deb", ".dmg", ".fat", ".hfs", ".lzh", ".lzma", ".mbr",
             ".msi", ".mslz", ".nsis", ".ntfs", ".rpm", ".squashfs", ".udf", ".vhd", ".xar"]
 
+
 def clean_target(path: str):
     if ospath.exists(path):
         LOGGER.info(f"Cleaning Target: {path}")
@@ -31,6 +32,7 @@ def clean_target(path: str):
             except:
                 pass
 
+
 def clean_download(path: str):
     if ospath.exists(path):
         LOGGER.info(f"Cleaning Download: {path}")
@@ -39,12 +41,14 @@ def clean_download(path: str):
         except:
             pass
 
+
 def start_cleanup():
     try:
         rmtree(DOWNLOAD_DIR)
     except:
         pass
     makedirs(DOWNLOAD_DIR)
+
 
 def clean_all():
     aria2.remove_all(True)
@@ -55,6 +59,7 @@ def clean_all():
     except:
         pass
 
+
 def exit_clean_up(signal, frame):
     try:
         LOGGER.info("Please wait, while we clean up the downloads and stop running downloads")
@@ -63,6 +68,7 @@ def exit_clean_up(signal, frame):
     except KeyboardInterrupt:
         LOGGER.warning("Force Exiting before the cleanup finishes!")
         sysexit(1)
+
 
 def clean_unwanted(path: str):
     LOGGER.info(f"Cleaning unwanted files/folders: {path}")
@@ -76,6 +82,7 @@ def clean_unwanted(path: str):
         if not listdir(dirpath):
             rmdir(dirpath)
 
+
 def get_path_size(path: str):
     if ospath.isfile(path):
         return ospath.getsize(path)
@@ -86,6 +93,7 @@ def get_path_size(path: str):
             total_size += ospath.getsize(abs_path)
     return total_size
 
+
 def get_base_name(orig_path: str):
     ext = [ext for ext in ARCH_EXT if orig_path.lower().endswith(ext)]
     if len(ext) > 0:
@@ -94,11 +102,13 @@ def get_base_name(orig_path: str):
     else:
         raise NotSupportedExtractionArchive('File format not supported for extraction')
 
+
 def get_mime_type(file_path):
     mime = Magic(mime=True)
     mime_type = mime.from_file(file_path)
     mime_type = mime_type or "text/plain"
     return mime_type
+
 
 def take_ss(video_file, duration):
     des_dir = 'Thumbnails'
@@ -121,6 +131,7 @@ def take_ss(video_file, duration):
         img.convert("RGB").save(des_dir, "JPEG")
 
     return des_dir
+
 
 def split_file(path, size, file_, dirpath, split_size, listener, start_time=0, i=1, inLoop=False, noMap=False):
     if listener.seed and not listener.newDir:
@@ -197,6 +208,7 @@ def split_file(path, size, file_, dirpath, split_size, listener, start_time=0, i
             return False
     return True
 
+
 def get_media_info(path):
 
     try:
@@ -226,6 +238,7 @@ def get_media_info(path):
         artist = None
 
     return duration, artist, title
+
 
 def get_media_streams(path):
 

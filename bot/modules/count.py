@@ -7,6 +7,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.ext_utils.bot_utils import is_gdrive_link, new_thread
 
+
 @new_thread
 def countNode(update, context):
     reply_to = update.message.reply_to_message
@@ -33,6 +34,7 @@ def countNode(update, context):
         sendMessage(result + cc, context.bot, update.message)
     else:
         sendMessage('Send Gdrive link along with command or by replying to the link by command', context.bot, update.message)
+
 
 count_handler = CommandHandler(BotCommands.CountCommand, countNode, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 dispatcher.add_handler(count_handler)

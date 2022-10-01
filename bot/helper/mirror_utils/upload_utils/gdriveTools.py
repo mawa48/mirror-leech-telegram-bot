@@ -27,6 +27,7 @@ getLogger('googleapiclient.discovery').setLevel(ERROR)
 if USE_SERVICE_ACCOUNTS:
     SERVICE_ACCOUNTS_NUMBER = len(listdir("accounts"))
 
+
 class GoogleDriveHelper:
 
     def __init__(self, name=None, path=None, size=0, listener=None):
@@ -116,7 +117,7 @@ class GoogleDriveHelper:
     def __getIdFromUrl(link: str):
         if "folders" in link or "file" in link:
             regex = r"https:\/\/drive\.google\.com\/(?:drive(.*?)\/folders\/|file(.*?)?\/d\/)([-\w]+)"
-            res = re_search(regex,link)
+            res = re_search(regex, link)
             if res is None:
                 raise IndexError("G-Drive ID not found.")
             return res.group(3)
@@ -139,7 +140,7 @@ class GoogleDriveHelper:
            retry=retry_if_exception_type(GCError))
     def __getFileMetadata(self, file_id):
         return self.__service.files().get(supportsAllDrives=True, fileId=file_id,
-                                              fields="name,id,mimeType,size").execute()
+                                          fields="name,id,mimeType,size").execute()
 
     @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(3),
            retry=retry_if_exception_type(GCError))
@@ -472,10 +473,10 @@ class GoogleDriveHelper:
         if not rootid:
             rootid = file.get('teamDriveId')
         if rootid == "root":
-            rootid = self.__service.files().get(fileId = 'root', fields="id").execute().get('id')
+            rootid = self.__service.files().get(fileId='root', fields="id").execute().get('id')
         x = file.get("name")
         y = file.get("id")
-        while(y != rootid):
+        while y != rootid:
             rtnlist.append(x)
             file = self.__service.files().get(
                                             fileId=file.get("parents")[0],
@@ -591,9 +592,9 @@ class GoogleDriveHelper:
                 if mime_type == "application/vnd.google-apps.folder":
                     furl = f"https://drive.google.com/drive/folders/{file.get('id')}"
                     msg += '<span class="container start rfontsize">' \
-                          f"<div>📁 {file.get('name')} (folder)</div>" \
+                           f"<div>📁 {file.get('name')} (folder)</div>" \
                            '<div class="dlinks">' \
-                          f'<span> <a class="forhover" href="{furl}">Drive Link</a></span>'
+                           f'<span> <a class="forhover" href="{furl}">Drive Link</a></span>'
                     if INDEX_URLS[index] is not None:
                         if isRecur:
                             url_path = "/".join([rquote(n, safe='') for n in self.__get_recursive_list(file, parent_id)])
@@ -601,20 +602,20 @@ class GoogleDriveHelper:
                             url_path = rquote(f'{file.get("name")}', safe='')
                         url = f'{INDEX_URLS[index]}/{url_path}/'
                         msg += '<span> | </span>' \
-                              f'<span> <a class="forhover" href="{url}">Index Link</a></span>'
+                               f'<span> <a class="forhover" href="{url}">Index Link</a></span>'
                 elif mime_type == 'application/vnd.google-apps.shortcut':
                     furl = f"https://drive.google.com/drive/folders/{file.get('id')}"
                     msg += '<span class="container start rfontsize">' \
-                          f"<div>📁 {file.get('name')} (shortcut)</div>" \
+                           f"<div>📁 {file.get('name')} (shortcut)</div>" \
                            '<div class="dlinks">' \
-                          f'<span> <a class="forhover" href="{furl}">Drive Link</a></span>'\
+                           f'<span> <a class="forhover" href="{furl}">Drive Link</a></span>'\
                            '</div></span>'
                 else:
                     furl = f"https://drive.google.com/uc?id={file.get('id')}&export=download"
                     msg += '<span class="container start rfontsize">' \
-                          f"<div>📄 {file.get('name')} ({get_readable_file_size(int(file.get('size', 0)))})</div>" \
+                           f"<div>📄 {file.get('name')} ({get_readable_file_size(int(file.get('size', 0)))})</div>" \
                            '<div class="dlinks">' \
-                          f'<span> <a class="forhover" href="{furl}">Drive Link</a></span>'
+                           f'<span> <a class="forhover" href="{furl}">Drive Link</a></span>'
                     if INDEX_URLS[index] is not None:
                         if isRecur:
                             url_path = "/".join(rquote(n, safe='') for n in self.__get_recursive_list(file, parent_id))
@@ -622,11 +623,11 @@ class GoogleDriveHelper:
                             url_path = rquote(f'{file.get("name")}')
                         url = f'{INDEX_URLS[index]}/{url_path}'
                         msg += '<span> | </span>' \
-                              f'<span> <a class="forhover" href="{url}">Index Link</a></span>'
+                               f'<span> <a class="forhover" href="{url}">Index Link</a></span>'
                         if VIEW_LINK:
                             urlv = f'{INDEX_URLS[index]}/{url_path}?a=view'
                             msg += '<span> | </span>' \
-                                  f'<span> <a class="forhover" href="{urlv}">View Link</a></span>'
+                                   f'<span> <a class="forhover" href="{urlv}">View Link</a></span>'
                 msg += '</div></span>'
                 contents_count += 1
             if noMulti:
